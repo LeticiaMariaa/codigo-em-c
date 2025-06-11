@@ -1,0 +1,121 @@
+/******************************************************************************
+Tema: SISTEMA DE MONITORAMENTO E ANÁLISE DE PRODUÇÃO INDUSTRIAL
+Desenvolver um software em linguagem C capaz de monitorar, registrar, simular e analisar dados de produção em uma linha de manufatura. O sistema deverá armazenar dados de produção por máquina, calcular métricas de eficiência e permitir análises a partir de um menu interativo.
+
+Especificações obrigatórias:
+1.O programa deverá conter pelo menos uma estrutura (struct), por exemplo:
+struct Maquina {
+    int id;        // identificação da peça
+    char des[50];  // descrição
+    float qtd;     // quantidade
+    float vun;     // valor unitário
+    float vto;     // valor total
+};
+
+2.O programa deverá possuir um Menu de Opções, como:
+
+========= MENU PRINCIPAL =========
+1. Cadastrar peça
+2. Listar estoque
+3. Pesquisar peça
+4. Excluir peça
+5. Sair
+==================================
+
+3.O programa deverá conter, no mínimo, quatro funções chamadas a partir do menu:
+void Cadastrar(...)
+void Listar(...)
+void Pesquisar(...)
+void Excluir(...)
+
+4.Uma das funções (por exemplo, Listar) deverá ser obrigatoriamente escrita após a função main(). As demais podem ser escritas antes da main().
+Funcionalidades detalhadas:
+- Cadastrar: entrada de dados de identificação, quantidade e valor unitário.
+- Listar: imprimir na tela todas as peças do estoque.
+- Pesquisar: procurar pela existencia de uma peça, pela sua identificação.
+- Excluir: retirar do cadastro uma peça, dada sua identificação.
+Critérios Técnicos:
+- Uso avançado de struct e vetores de estruturas.
+- Boas práticas com modularização (uso de funções).
+- Gerenciamento correto de entrada/saída.
+- Robustez com tratamento de erros.
+*******************************************************************************/
+
+#include <stdio.h>
+#include <string.h>
+
+typedef struct { 
+    char nome[100]; // Array 
+    long int id;
+    int qtd;
+    float vun;
+} cadastro;
+
+int main()
+{
+    int E, i, x = 0, novo; // 'x' representa o número de peças diferentes
+    long int fica;
+    cadastro cad[100]; // 'cadastro' é um aliás para a estrutura anônima (a estrutura é um tipo de dado) e 'cad' é uma variável criada a partir desse tipo de dado.
+
+    do {
+        printf("========= MENU PRINCIPAL =========\n1. Cadastrar peça\n2. Listar estoque\n3. Pesquisar peça\n4. Excluir peça\n5. Sair\n==================================\n");
+        printf("Sua opção --> ");
+        scanf("%d", &E);
+        if (E > 5 || E <= 0) {
+            printf("Opção inválida! ||tente novamente||\n\n");
+            continue;
+        }
+    } while (E > 5 && E <= 0);
+
+    do {
+        switch (E) {
+            case 1:
+                printf("\nInsira o número de tipos de peças a serem cadastrados: ");
+                scanf("%d", &novo);
+
+                if (novo < 101) {
+                    for (i = x; i < x + novo; i++) {
+                        printf("\nInsira o nome da peça: ");
+                        scanf("%s", cad[i].nome);
+                        printf("Insira o ID da peça: ");
+                        scanf("%li", &cad[i].id);
+                        printf("Insira o número de peças: ");
+                        scanf("%i", &cad[i].qtd);
+                        printf("Insira o valor unitário: ");
+                        scanf("%f", &cad[i].vun);
+                    }
+                    x += novo;  // Atualiza a quantidade cadastrada
+                } else {
+                    printf("O estoque não comporta mais que 100 peças\n");
+                }
+                break;
+            case 2:
+                printf("\n=== Estoque Atual ===\n");
+                for (i = 0; i < x; i++) {
+                    printf("ID: %li\n", cad[i].id);
+                    printf("Nome: %s\n", cad[i].nome);
+                    printf("Quantidade: %d\n", cad[i].qtd);
+                    printf("Valor Unitário: %.2f\n", cad[i].vun);
+                    printf("---------------------\n");
+                }
+                break;
+
+            case 3:
+                printf("Digite o ID da peça desejada: ");
+                scanf("%li", &fica);
+                for (i = 0; i < x; i++) {
+                    if (fica == cad[i].id) {
+                        printf("ID: %li\nNome: %s\nQuantidade: %d\nValor Unitário: %.2f\n",
+                               cad[i].id, cad[i].nome, cad[i].qtd, cad[i].vun);
+                    }
+                }
+                break;
+
+            case 5:
+                printf("\nPrograma finalizado.");
+                break;
+        }
+    } while (E != 5);
+
+    return 0;
+}
