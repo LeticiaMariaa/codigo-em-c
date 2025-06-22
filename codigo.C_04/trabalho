@@ -40,75 +40,116 @@ Critérios Técnicos:
 - Gerenciamento correto de entrada/saída.
 - Robustez com tratamento de erros.
 *******************************************************************************/
+// O ponteiro indica a localização duma variável na memória, é como um endereço
+
+
 
 #include <stdio.h>
 #include <string.h>
 
-typedef struct { 
-char nome[100]; // Array 
+typedef struct {
+char nome [100];
 long int id;
 int qtd;
 float vun;
 } cadastro;
 
+int tam = 0; // Quantidade de peças que eu já foram cadastradas.
 
+void listar (cadastro cad[]){
+        for (int i = 0; i < tam; i++){
+            printf ("\nID peça: %li", cad[i].id); //Os "ID's" não podem ser iguais.
+            printf ("\nNome: %s", cad[i].nome);
+            printf ("\nQuantidade: %d", cad[i].qtd);
+            printf ("\nValor unitário: %2f\n", cad [i].vun);
+            }
+            if (tam == 0) printf ("Nenhuma peça cadastrada no sistema.\n");
+        }    
+
+
+void pesquisar (cadastro cad[]){
+int temp;
+        
+        if (tam == 0) 
+            printf ("Nenhuma peça cadastrada no sistema.\n");
+        if (tam > 0) {printf ("Pesquise por uma peça inserindo seu ID: ");
+        scanf ("%d", &temp);
+        for (int i = 0; i < tam; i++){
+            if (tam > 0)
+                if (cad[i].id == temp)
+                {
+                printf ("Nome: %s", cad[i].nome);
+                printf ("\nQuantidade: %d", cad[i].qtd);
+                printf ("\nValor unitário: %2f\n", cad [i].vun);
+                }
+                if (cad[i].id != temp) printf ("Peça não encontrada no estoque ou inexistente.\n");
+        }
+        }
+}
+
+void excluir (cadastro cad[]){
+long int temp;
+int flag = 0;
+
+        if (tam == 0) 
+        {
+        printf ("Nenhuma peça cadastrada cadastrada no sistema.\n");
+        }
+        if (tam > 0) printf ("Insira o ID da peça que você deseja excluir: ");
+        scanf ("%li", &temp);
+        
+        for (int i = 0; i < tam; i++){
+            if (cad[i].id == temp)
+            {for (int j = i; j < tam - 1; j++)
+                {
+                cad[j] = cad[j + 1];
+                }
+                tam--;
+                printf ("Peça exluída!\n");
+                flag = 1;
+            }
+        }if (flag == 0) printf ("Peça não encontrada ou já excluída.\n");
+       
+}
 
 int main()
 {
-int E, i, x, n; // 'x' representa o número de peças diferentes
-long int fica;
-cadastro cad[100]; // 'cadastro' é um aliás para a estrutura anônima (a estrutura é um tipo de dado) e 'cad' é uma variável criada a partir desse tipo de dado.
+int E;
+cadastro cad [100]; // cad é o nome do vetor
 
-            printf ("========= MENU PRINCIPAL =========\n1. Cadastrar peça\n2. Listar estoque\n3. Pesquisar peça\n4. Excluir peça\n5. Sair\n==================================\n");
-            scanf ("%d", &E);
-            switch (E){
-            case 1: 
-              int novo;
-                printf ("\nInsira o número de tipos de peças a serem cadastrados: ");
-                scanf ("%d", &novo);
-               do{
-                for (i = 0; i < x + novo; i++){
-                printf ("\nInsira o nome da peça: ");
-                scanf ("%s", cad[i].nome);
-                printf ("Insira o ID da peça: ");
-                scanf ("%li", &cad[i].id);
-                printf ("Insira o número de peças: ");
-                scanf ("%i", &cad[i].qtd);
-                printf ("Insira o valor unitário: ");
-                scanf ("%f", &cad[i].vun);
-                }
-                printf ("\n========= MENU PRINCIPAL =========\n1. Cadastrar peça\n2. Listar estoque\n3. Pesquisar peça\n4. Excluir peça\n5. Sair\n==================================\n");
-                 scanf ("\n%d", &E);
-                }while (E == 1);
-                x += novo;
-                break;
-            case 2: 
-                printf("\n=== Estoque Atual ===\n");
-                    for (i = 0; i < x; i++) {
-                        printf("ID: %li\n", cad[i].id);
-                        printf("Nome: %s\n", cad[i].nome);
-                        printf("Quantidade: %d\n", cad[i].qtd);
-                        printf("Valor Unitário: %.2f\n", cad[i].vun);
-                        printf("---------------------\n");
+
+                    
+                    do
+                    {
+                        printf ("\n========= MENU PRINCIPAL =========\n1. Cadastrar peça\n2. Listar estoque\n3. Pesquisar peça\n4. Excluir peça\n5. Sair\n==================================\n");
+                        scanf ("%d", &E);
+                        switch (E){
+                            case 1:
+                                if (tam > 100) printf ("O estoque não comporta mais que 100 peças.");
+                                else{
+                                    printf ("Insira o nome da peça: ");
+                                    scanf ("%s", cad[tam].nome);
+                                    printf ("Insira o ID da peça: ");
+                                    scanf ("%li", &cad[tam].id);
+                                    printf ("Insira o número de peças: ");
+                                    scanf ("%i", &cad[tam].qtd);
+                                    printf ("Insira o valor unitário: ");
+                                    scanf ("%f", &cad[tam].vun);
+                                    tam++;
+                                    }
+                                break;
+                            case 2:
+                                listar (cad);
+                                break;
+                            case 3: 
+                                pesquisar (cad);
+                                break;
+                            case 4:
+                                excluir (cad);
+                                break;
+                        } 
                     }
-            break;
-            case 3:
-                    printf("Digite o ID da peça desejada: ");
-                    scanf("%li", &fica);
-                    for (i = 0; i < x; i++) {
-                        if (fica == cad[i].id) {
-                            printf("ID: %li\nNome: %s\nQuantidade: %d\nValor Unitário: %f\n",
-                                cad[i].id, cad[i].nome, cad[i].qtd, cad[i].vun);
-                        }
-                    }
-              break;
-            case 5:
-                printf ("\nPrograma finalizado.");
-            default:
-                printf("Opção inválida. Tente novamente.\n");
-                break;
-            }
-    
-            
-    return 0;
+                    while (E != 5 & E > 0 & E < 5);
+                    if (E == 5) printf ("Programa finalizado.");
+return 0;
 }
